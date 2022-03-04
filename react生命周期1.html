@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+      // 函数组件    就是一个函数返回一段jsx
+      // 1首字母 大写  2 返回的jsx只能有一个根节点
+      const Cp1 = () => {
+        return (
+          <span>
+            <div> 我是cp1 </div>
+            <div> 我是cp1 </div>
+          </span>
+        );
+      };
+
+      //  类组件
+      class Cp2 extends React.Component {
+        constructor(props) {
+          super(props); // 由于我们的Cp2组件是继承  React.Component类 所以一定需要 super()
+          // state就是数据, 方便我们在jsx里面使用的数据，跟普通的数据的区别是
+          //  state的变化会自动的引起使用到state的地方重新渲染
+          console.log('props', props);
+          // 只有把props也赋值给 super() 才有才当前组件内使用 this.props访问到传递进来的参数
+          console.log('this.props', this.props);
+          this.state = {
+            a: 1,
+            c: false,
+            d: [],
+            timer: null,
+          };
+
+          this.fn1 = this.fn1.bind(this);
+          console.log('constructor fired');
+        }
+
+        // 如果是以下声明函数的方式 this是指向undefine
+        fn1() {
+          //  console.log('fn1 fired',this)
+          // this.setState是类组件当中修改状态的唯一方式
+          // 传入一个对象， 该对象会合并到原有的states
+          this.setState({
+            a: this.state.a + 1,
+            // c: !this.state.c
+            // d: [
+            //   { id: 1, title: '我是标题1' },
+            //   { id: 2, title: '我是标题2' },
+            //   { id: 3, title: '我是标题3' },
+            // ]
+          });
+        }
+        // 如果是箭头函数的话 因为箭头函数this指向外层
+        // 这样子的函数在执行的时候就指向 组件实例自身
+        fn2 = () => {
+          //  console.log('fn2 fired', this)
+          // 第二种修改状态的方法  传入一个函数,函数的第一个参数是当前的state
+          // 返回一个对象，返回的对象会合并到原来的state当中
+          this.setState((state) => {
+            return {
+              c: !state.c,
+            };
+          });
+        };
+
+        componentDidMount() {
+          console.log('componentDidMount fired');
+          this.props.e(9999);
+
+          // this.state.timer= setInterval(()=>{
+          //   console.log(Date.now())
+          // },1000)
+        }
+
+        componentDidUpdate() {
+          // 不仅仅是组件内的状态state变化才会触发
+          // 在接受的属性props发生变化也会触发
+          console.log('componentDidUpdate fired');
+        }
+
+        componentWillUnmount() {
+          console.log('componentWillUnmount fired');
+          clearInterval(this.state.timer);
+        }
+
+        componentWillUpdate(nextProps, nextState) {
+          console.log('componentWillupdate fired', nextProps);
+        }
+
+        shouldComponentUpdate(nextProps, nextState) {
+          console.log('shouldComponentUpdate fired', nextState);
+          if (nextState.a > 5) return true;
+          return false; //  true 更新  false 不更新 只能决定视图是否更新 不能决定state是否更新
+        }
+
+        render() {
+          console.log('render fired');
+          return (
+            <div>
+              我是Cp211111
+              <div> a {this.state.a} </div>
+              {this.state.c && <div>切换渲染</div>}
+              <ul>
+                {this.state.d.map((item) => (
+                  <li key={item.id}> {item.title} </li>
+                ))}
+              </ul>
+              <button onClick={this.fn2}> 我是cp2里面的按钮 fn2 </button>
+              <button onClick={this.fn1}> 我是cp2里面的按钮 fn1 </button>
+              <h1> props.a {this.props.a} </h1>
+            </div>
+          );
+        }
+      }
+
+      class Parent extends React.Component {
+        state = {
+          showCp2: true,
+          ct: 0,
+        };
+
+        switchCp2 = () => {
+          this.setState({
+            showCp2: !this.state.showCp2,
+          });
+        };
+
+        fn1inParent = (res) => {
+          console.log('res in parent', res);
+        };
+        render() {
+          return (
+            <div>
+              {this.state.showCp2 && (
+                <Cp2
+                  a={this.state.ct}
+                  b={1}
+                  c="true"
+                  d={true}
+                  e={this.fn1inParent}
+                ></Cp2>
+              )}
+              <button onClick={this.switchCp2}>切换渲染 Cp2组件</button>
+              <button
+                onClick={() => {
+                  this.setState({ ct: this.state.ct + 1 });
+                }}
+              >
+                {' '}
+                按钮in parent{' '}
+              </button>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <div>
+          <Cp1></Cp1>
+          <Parent></Parent>
+        </div>,
+        document.getElementById('app')
+      );
+    </script>
+  </body>
+</html>
