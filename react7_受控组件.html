@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+</head>
+
+<body>
+
+  <div id="app"></div>
+
+  <script type="text/babel">
+
+    // hook 函数 
+    // 表单的控件的双向绑定 => 在react当中称之为 受控组件
+    const { useState, useEffect, useRef, useMemo, useCallback } = React;
+    //  FC  function component
+    const Cp1 = () => {
+      const [str,setStr] = useState('');
+      const [uname,setUname] = useState('');
+      const [pwd,setPwd] = useState('');
+      return (
+        <div>
+          我是cp1
+          { str }
+          <input type="text" onInput={(ev)=> setUname(ev.target.value) } value={ uname } />
+          <input type="text" onInput={(ev) => setPwd(ev.target.value)} value={pwd} />
+
+
+          <button onClick={ ()=>setStr(123) }>我是按钮</button>
+        </div>
+      )
+    }
+
+    class Cp2 extends React.Component {
+
+      state = {
+        uname,
+        pwd
+      }
+      render(){
+                return (
+                    <div>
+                              我是cp2
+                         
+                              <input type="text" onInput={(ev) => this.setState({uname:ev.target.value})} value={this.state.uname} />
+                              <input type="text" onInput={(ev) => this.setState({pwd:ev.target.value})} value={this.state.pwd} />
+
+
+                              <button onClick={() => setStr(123)}>我是按钮</button>
+                    </div >
+             )
+      }
+    
+
+    }
+
+    ReactDOM.render((
+      <div>
+        <Cp1></Cp1>
+      </div>
+    ), document.getElementById('app'))
+
+
+
+
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+<div>
+
+</div>
+
+
+</body>
+
+</html>

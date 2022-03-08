@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+</head>
+
+<body>
+
+  <div id="app"></div>
+
+  <script type="text/babel">
+
+
+    // hook 函数 
+    const { useState, useEffect, useRef ,useMemo } = React;
+
+    
+    const Cp1 = () => {
+      
+      const [c,setC] = useState(1);
+      const [d,setD] = useState(1);
+      const [price,setPrice] = useState(10);
+      const [count,setCount] = useState(0);
+      // useMemo(函数，依赖项)  创建一个缓存数据 返回的值是 第一个传入的函数返回的值 这个值是有缓存的
+      // 第二个依赖项决定了是否更新缓存
+      // 使用它的目的是为了优化性能 减少不必要的运算
+      const  a = useMemo(()=> {
+          return d 
+      },[c])
+
+      const totalPrice = useMemo(()=>{
+        return count*price
+      },[count,price])
+
+      return (
+        <div>
+            我是cp1
+            <div> a { a } </div>
+            <div> c { c } </div>
+            <div> d { d } </div>
+            <button onClick={ ()=> setD(d+1)  }>d递增</button>
+            <button onClick={() => setC(c + 1)}>c递增</button>
+
+            <hr />
+            <div> 总价 { count * price }</div>
+            <button onClick={() => setCount(count - 1)}> 减 </button> 
+             { count } 
+            <button onClick={() => setCount(count + 1)}> 加 </button>
+
+        </div>
+      )
+    }
+
+    ReactDOM.render((
+      <div>
+        <Cp1></Cp1>
+      </div>
+    ), document.getElementById('app'))
+
+
+  </script>
+
+
+</body>
+
+</html>

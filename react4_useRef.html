@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <!-- <script crossorigin src="https://cdn.staticfile.org/babel-standalone/6.7.4/babel.min.js"></script>
+  <script crossorigin src="https://cdn.staticfile.org/react/17.0.2/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.staticfile.org/react-dom/17.0.2/umd/react-dom.development.js"></script> -->
+
+</head>
+
+<body>
+
+  <div id="app"></div>
+
+  <script type="text/babel">
+
+
+    // hook 函数 
+    const { useState, useEffect, useRef } = React;
+
+
+    const Cp2 = ()=>{
+      return <div>我是Cp2</div>
+    }
+
+    class Cp3 extends React.Component {
+      state = {
+        c3:'我是cp3里面的内容'
+      }
+
+      fn1 = ()=>{
+        this.setState({
+          c3: this.state.c3 + 1
+        })
+      }
+
+      render(){
+          return <div>我是Cp3  { this.state.c3 } </div>
+      }
+    }
+
+ 
+    const Cp1 = () => {
+
+      const [a,setA] = useState(1);
+      const domK = useRef(); // 创建一个转发对象
+      const c2ref = useRef();  // ref不能声明在函数组件上面 函数组件本质上还是一个函数 所以不会创建一个实例
+      const c3ref = useRef();  
+      // 类组件会在使用的时候 实例化成一个对象 
+      //  如果 类组件使用ref属性 那么就会把这个类组件实例挂在在对应的ref转发对象的 current属性上面
+      
+
+
+      const fn1 = ()=>{
+          // console.log(document.querySelector('#k').innerText)
+          // 下面的 div ref={domK} 意味着react 会把设置了ref属性的节点对象挂在在 domK.current属性上
+          // 为什么 要用ref这样的技术点 1 简化代码 2 可以直接快速在jsx模板当中知道对应的节点挂在在那个ref对象上
+          console.log(domK.current.innerText)
+      }
+
+      return (
+        <div>
+            <div id="k" ref={domK}> { a } </div>
+            <button onClick={()=> {  setA(a+1)   }}>a 递增</button>
+            <button onClick={ fn1 }> 获取id=k的节点里面的text </button>
+            <button onClick={ ()=>{  c3ref.current.fn1()   } }> 查看在组件上的ref </button>
+            <hr />
+            <Cp2></Cp2>
+           
+            <hr />
+            <Cp3 ref={c3ref}></Cp3>
+
+        </div>
+      )
+    }
+
+    ReactDOM.render((
+      <div>
+        <Cp1></Cp1>
+      </div>
+    ), document.getElementById('app'))
+
+
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.0/axios.min.js"></script>
+</head>
+
+<body>
+
+  <div id="app"></div>
+
+  <script type="text/babel">
+
+    // hook 函数 
+    // 表单的控件的双向绑定 => 在react当中称之为 受控组件
+    const { useState, useEffect, useRef, useMemo, useCallback } = React;
+    
+    // 自定义hook 是我们自己把一些可复用的逻辑进行封装的技巧
+    // 1 自定义hook 是函数
+    // 2 约定 以use开头
+    // 3 在自定义hook里面可以使用官方的hook
+    const useGetHostList = ()=>{
+      const [hostList,setHotList] = useState([]);
+
+      const getList = async ()=>{
+        let res = await axios.get('https://cnodejs.org/api/v1/topics?limit=5');
+        setHotList(res.data.data);
+      }
+
+      useEffect(()=>{
+          getList()
+      },[])
+
+      return hostList
+    }
+
+
+    const Cp1 = ()=>{
+      
+      const hotList = useGetHostList();
+
+      return (
+        <div>
+          <h1>我是cp1</h1>
+          { 
+            hotList.map(item=><div> {item.title} </div>)
+          } 
+    
+        </div>
+      )
+    }
+
+
+       const Cp2 = () => {
+
+
+         const list = useGetHostList();
+
+          return (
+            <div>
+              <h1>我是cp2</h1>
+              {
+                list.map(item => <div> {item.title} </div>)
+               } 
+            </div>
+          )
+        }
+      
+
+
+    ReactDOM.render((
+      <div>
+         <Cp1></Cp1>
+         <Cp2></Cp2>
+      </div>
+    ), document.getElementById('app'))
+
+
+
+
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+<div>
+
+</div>
+
+
+</body>
+
+</html>
